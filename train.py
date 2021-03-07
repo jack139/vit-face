@@ -2,6 +2,7 @@ import os
 os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
 
 import random
+from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import *
 from keras.callbacks import *
 import skimage.io as io
@@ -12,6 +13,7 @@ from transformer import VisionTransformer
 from keras.datasets import cifar10
 
 input_size = (128,128)
+steps_per_epoch = 2000
 batch_size = 64
 epochs = 30
 
@@ -90,7 +92,8 @@ if __name__ == '__main__':
     #except: print('\n\nnew model')
 
     vit.model.fit(train_generator,
-        batch_size=batch_size,
+        steps_per_epoch=steps_per_epoch,
+        #batch_size=batch_size,
         epochs=epochs, 
-        validation_data=test_generator,
+        #validation_data=test_generator,
         callbacks=[early_stop, lr_scheduler, model_saver])
