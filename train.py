@@ -29,9 +29,9 @@ Large   24      1024        4096        16      307M
 Huge    32      1280        5120        16      632M
 '''
 
-train_dir = '/media/gt/_dde_data/Datasets/AFDB_face_dataset'
-#train_dir = '../datasets/AFDB_face_dataset'
-#test_dir = '../datasets/AFDB_face_dataset'
+train_dir = '/media/gt/_dde_data/Datasets/CASIA-maxpy-clean'
+#train_dir = '../datasets/CASIA-maxpy-clean'
+#test_dir = '../datasets/CASIA-maxpy-clean'
 
 # label 数量
 classes_num = len(os.listdir(train_dir))
@@ -92,7 +92,6 @@ if __name__ == '__main__':
 
     vit.model.fit(train_generator,
         steps_per_epoch=steps_per_epoch,
-        #batch_size=batch_size,
         epochs=epochs, 
         #validation_data=test_generator,
         callbacks=[early_stop, lr_scheduler, model_saver])
