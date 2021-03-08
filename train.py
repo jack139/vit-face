@@ -9,7 +9,7 @@ from keras.callbacks import *
 from transformer import VisionTransformer
 
 
-input_size = (128,128)
+input_size = (224,224)
 steps_per_epoch = 2000
 batch_size = 16
 epochs = 30
@@ -18,8 +18,9 @@ layers = 12
 d_model = 768   # Hidden_size_D
 n_head = 12
 mlp_dim = 3072   # MLP_size
-patch_size = 8
+patch_size = 16  # 224 / 16 = 14
 dropout = 0.1
+
 
 '''
 Model  Layers Hidden_size_D MLP_size    Heads   Params
