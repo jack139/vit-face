@@ -5,24 +5,21 @@ import random
 from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import *
 from keras.callbacks import *
-import skimage.io as io
-import skimage.transform as trans
 
 from transformer import VisionTransformer
 
-from keras.datasets import cifar10
 
 input_size = (128,128)
 steps_per_epoch = 2000
-batch_size = 64
+batch_size = 16
 epochs = 30
 
-layers = 8
-d_model = 256   # Hidden_size_D
-n_head = 16
-mlp_dim = 128   # MLP_size
+layers = 12
+d_model = 768   # Hidden_size_D
+n_head = 12
+mlp_dim = 3072   # MLP_size
 patch_size = 8
-dropout = 0.2 
+dropout = 0.1
 
 '''
 Model  Layers Hidden_size_D MLP_size    Heads   Params
@@ -31,7 +28,8 @@ Large   24      1024        4096        16      307M
 Huge    32      1280        5120        16      632M
 '''
 
-train_dir = '../datasets/AFDB_face_dataset'
+train_dir = '/media/gt/_dde_data/Datasets/AFDB_face_dataset'
+#train_dir = '../datasets/AFDB_face_dataset'
 #test_dir = '../datasets/AFDB_face_dataset'
 
 # label 数量
@@ -43,7 +41,7 @@ train_datagen = ImageDataGenerator(
 )
 train_generator = train_datagen.flow_from_directory(
     train_dir,
-    class_mode="categorical",
+    class_mode="sparse",
     target_size=input_size,
     batch_size=batch_size,
 )
@@ -79,17 +77,17 @@ class LRSchedulerPerStep(Callback):
 lr_scheduler = LRSchedulerPerStep(d_model, 4000) 
 
 mfile = 'vit-face.h5'
-model_saver = ModelCheckpoint(mfile, save_best_only=True, save_weights_only=True, monitor='val_loss', verbose=1)
+model_saver = ModelCheckpoint(mfile, save_best_only=True, save_weights_only=True, monitor='loss', verbose=1)
 
-early_stop = EarlyStopping(patience=10, monitor='val_loss')
+early_stop = EarlyStopping(patience=10, monitor='loss')
 
-vit.compile(Adam(1e-4, 0.9, 0.98, epsilon=1e-9))
+vit.compile(Adam(8e-4, 0.9, 0.98, epsilon=1e-9))
 
 vit.model.summary()
 
 if __name__ == '__main__':    
-    #try: vit.model.load_weights(mfile)
-    #except: print('\n\nnew model')
+    try: vit.model.load_weights(mfile)
+    except: print('\n\nnew model')
 
     vit.model.fit(train_generator,
         steps_per_epoch=steps_per_epoch,
